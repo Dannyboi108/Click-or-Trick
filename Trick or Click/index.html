@@ -21,7 +21,17 @@
   <h3>Best Halloween Costume</h3>
 </div>
   
-<button id="voteButton">Upload to a Category</button>
+
+<div id="uploadContainer">
+  <select id="categorySelect">
+    <option value="jacko">Best Jack-O-Lantern Design</option>
+    <option value="costume">Best Halloween Costume</option>
+  </select>
+  
+  <label for="fileUpload" id="voteButton">Upload Your Entry</label>
+  <input type="file" id="fileUpload" accept="image/*" style="display: none;">
+</div>
+
 
 
   <script src="script.js"></script>

@@ -91,11 +91,30 @@ h2 {
   100% { transform: translate(-50%, -52%); }
 }
 
-#voteButton {
+#uploadContainer {
   position: absolute;
-  bottom: 30px; /* distance from the bottom of the viewport */
-  left: 50%;    /* center horizontally */
+  bottom: 30px;
+  left: 50%;
   transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+#categorySelect {
+  padding: 10px 15px;
+  font-size: 1.2rem;
+  border-radius: 10px;
+  border: none;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: #ffffff;
+  font-family: "Creepster", system-ui;
+  text-align: center;
+  box-shadow: 0 0 10px #ff00ff, 0 0 20px #660066;
+}
+
+#voteButton {
   padding: 15px 30px;
   font-size: 1.5rem;
   font-family: "Creepster", system-ui;
@@ -109,7 +128,7 @@ h2 {
 }
 
 #voteButton:hover {
-  transform: translateX(-50%) scale(1.05);
+  transform: scale(1.05);
   box-shadow: 0 0 20px #ff4d4d, 0 0 40px #ff0000;
 }
 
