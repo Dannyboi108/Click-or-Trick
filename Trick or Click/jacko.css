@@ -155,11 +155,14 @@ h2 {
   box-shadow: -5px 0 20px rgba(0,0,0,0.5);
   padding: 20px;
   color: #fff;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Creepster', cursive;
+  
   display: flex;
-  justify-content: center;
-  align-items: flex-start;
+  flex-direction: column; /* 👈 stack content vertically */
+  align-items: stretch;   /* 👈 make content fill width */
+  justify-content: flex-start;
 }
+
 
 #rightSidebar h2 {
   font-family: 'Creepster', cursive;
@@ -168,3 +171,32 @@ h2 {
   text-shadow: 0 0 10px #ff00ff;
   margin: 0;
 }
+
+/* Leaderboard list */
+#leaderboardList {
+  list-style: none; /* remove default numbers */
+  padding: 0;
+  margin-top: 20px;
+  width: 100%;
+  counter-reset: rank; /* start custom counter */
+}
+
+#leaderboardList li {
+  counter-increment: rank;
+  position: relative;
+  padding-left: 40px; /* space for numbers */
+  margin-bottom: 12px;
+  font-size: 1.1rem;
+  color: #fff;
+}
+
+#leaderboardList li::before {
+  content: counter(rank) ".";
+  position: absolute;
+  left: 10px;
+  top: 0;
+  font-weight: bold;
+  color: #ff66ff;
+  text-shadow: 0 0 5px #ff00ff;
+}
+

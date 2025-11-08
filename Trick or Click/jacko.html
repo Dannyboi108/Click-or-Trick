@@ -1,6 +1,5 @@
-<h1>🎃 Jack-O-Lantern Entries 🎃</h1>
-<h2>Best Jack-O-Lantern Design</h2>
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -8,50 +7,66 @@
   <link rel="stylesheet" href="..\Trick or Click\jacko.css" />
 </head>
 
-<div class="jacko-gallery">
-  <div class="jacko-entry-wrapper">
-    <div class="jacko-entry">
-      <img src="..\Trick or Click\images\1.png" alt="Jack-O-Lantern 1">
+<body>
+  <h1>🎃 Jack-O-Lantern Entries 🎃</h1>
+  <h2>Best Jack-O-Lantern Design</h2>
+
+  <div class="jacko-gallery">
+    <div class="jacko-entry-wrapper">
+      <div class="jacko-entry">
+        <img src="..\Trick or Click\images\1.png" alt="Jack-O-Lantern 1">
+      </div>
+      <div class="vote-buttons">
+        <button class="upvote">⬆</button>
+        <button class="downvote">⬇</button>
+      </div>
     </div>
-    <div class="vote-buttons">
-      <button class="upvote">⬆</button>
-      <button class="downvote">⬇</button>
+
+    <div class="jacko-entry-wrapper">
+      <div class="jacko-entry">
+        <img src="..\Trick or Click\images\2.png" alt="Jack-O-Lantern 2">
+      </div>
+      <div class="vote-buttons">
+        <button class="upvote">⬆</button>
+        <button class="downvote">⬇</button>
+      </div>
+    </div>
+
+    <div class="jacko-entry-wrapper">
+      <div class="jacko-entry">
+        <img src="..\Trick or Click\images\3.png" alt="Jack-O-Lantern 3">
+      </div>
+      <div class="vote-buttons">
+        <button class="upvote">⬆</button>
+        <button class="downvote">⬇</button>
+      </div>
+    </div>
+
+    <div class="jacko-entry-wrapper">
+      <div class="jacko-entry">
+        <img src="..\Trick or Click\images\4.png" alt="Jack-O-Lantern 4">
+      </div>
+      <div class="vote-buttons">
+        <button class="upvote">⬆</button>
+        <button class="downvote">⬇</button>
+      </div>
     </div>
   </div>
 
-  <div class="jacko-entry-wrapper">
-    <div class="jacko-entry">
-      <img src="..\Trick or Click\images\2.png" alt="Jack-O-Lantern 2">
-    </div>
-    <div class="vote-buttons">
-      <button class="upvote">⬆</button>
-      <button class="downvote">⬇</button>
-    </div>
-  </div>
-
-  <div class="jacko-entry-wrapper">
-    <div class="jacko-entry">
-      <img src="..\Trick or Click\images\3.png" alt="Jack-O-Lantern 3">
-    </div>
-    <div class="vote-buttons">
-      <button class="upvote">⬆</button>
-      <button class="downvote">⬇</button>
-    </div>
-  </div>
-  
-   <div class="jacko-entry-wrapper">
-    <div class="jacko-entry">
-      <img src="..\Trick or Click\images\4.png" alt="Jack-O-Lantern 4">
-    </div>
-    <div class="vote-buttons">
-      <button class="upvote">⬆</button>
-      <button class="downvote">⬇</button>
-    </div>
+  <div id="rightSidebar">
+  <div>
+    <h2>Leaderboard</h2>
+    <ol id="leaderboardList">
+      <li>Nominee 1</li>
+      <li>Nominee 2</li>
+      <li>Nominee 3</li>
+      <li>Nominee 4</li>
+    </ol>
   </div>
 </div>
 
-<div id="rightSidebar">
-  <h2>Leaderboard</h2>
-</div>
+  <button id="backButton" onclick="window.history.back()">Back</button>
 
-<button id="backButton" onclick="window.history.back()">Back</button>
+  <script src="..\Trick or Click\script.js"></script>
+</body>
+</html>
