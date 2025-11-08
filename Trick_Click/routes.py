@@ -16,4 +16,4 @@ def jacko():
 
 @bp.route('/costume')
 def costume():
-    return render_template('costume.html')  
+    return render_template('costume.html') 
