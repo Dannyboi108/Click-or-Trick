@@ -90,7 +90,7 @@ input, select, textarea {
 	}
 
 	body {
-        background-image: url('../css/images/Background.png');
+        background-image: url('../Trick or Click/Background.png');
 
         background-size: cover; /* Ensures the image covers the entire background while maintaining aspect ratio */
         background-repeat: no-repeat; /* Prevents the image from repeating */
