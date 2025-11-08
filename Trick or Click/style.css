@@ -10,7 +10,10 @@
 html, body {
   height: 100%;
   width: 100%;
-  background: radial-gradient(circle at top left, #1a002a, #2b0047 80%);
+  background-image: url('images/Background2.jpg'); 
+  background-size: cover;      
+  background-position: center; 
+  background-repeat: no-repeat;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -36,7 +39,7 @@ h2 {
   font-size: 2.5rem;
   color: #ff9767;
   text-shadow: 0 0 15px #ff8636, 0 0 30px #ff7700;
-  margin-top: 50px; 
+  margin-top: 20px; 
 }
 
 .image-container {
@@ -50,6 +53,7 @@ h2 {
   border-radius: 20px;
   backdrop-filter: blur(5px);
   z-index: 0;
+  animation: bob 3s ease-in-out infinite alternate;
 }
 
 #image1 {
@@ -62,6 +66,7 @@ h2 {
   top: 55%;
   left: 70%;
   transform: translate(-50%, -50%);
+  animation-delay: 1s; /* offset second image for staggered bob */
 }
 
 .image-container img {
@@ -69,6 +74,13 @@ h2 {
   max-height: 80%;
   z-index: 1;
 }
+
+@keyframes bob {
+  0% { transform: translate(-50%, -52%); }
+  50% { transform: translate(-50%, -48%); }
+  100% { transform: translate(-50%, -52%); }
+}
+
 
 
 
