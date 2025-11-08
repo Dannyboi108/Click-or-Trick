@@ -15,12 +15,11 @@ html, body {
   justify-content: flex-start;
   align-items: center;
   flex-direction: column;
-  padding-top: 10px; 
+  padding-top: 0px; 
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   overflow: hidden;
   color: #fff;
 }
-
 
 h1 {
   font-family: "Creepster", system-ui;
@@ -31,4 +30,14 @@ h1 {
   border: none;
   box-shadow: none;
 }
+
+h2 {
+  font-family: "Creepster", system-ui;
+  font-size: 2.5rem;
+  color: #ff9767;
+  text-shadow: 0 0 15px #ff8636, 0 0 30px #ff7700;
+  margin-top: 50px; 
+}
+
+
 
