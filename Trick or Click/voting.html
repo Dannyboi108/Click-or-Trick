@@ -8,31 +8,31 @@
 </head>
 <body>
   <h1>🎃 Cast Your Votes 🎃</h1>
-  
   <h2> Categories </h2>
 
-  <div class="image-container" id="image1">
-  <img src="images/jacko.png" alt="Image 1">
-  <h3>Best Jack-O-Latern Design</h3>
-</div>
+  <a href="jacko.html">
+    <div class="image-container" id="image1">
+      <img src="images/jacko.png" alt="Image 1">
+      <h3>Best Jack-O-Lantern Design</h3>
+    </div>
+  </a>
 
-<div class="image-container" id="image2">
-  <img src="images/ghostface.png" alt="Image 2">
-  <h3>Best Halloween Costume</h3>
-</div>
-  
+  <a href="costume.html">
+    <div class="image-container" id="image2">
+      <img src="images/ghostface.png" alt="Image 2">
+      <h3>Best Halloween Costume</h3>
+    </div>
+  </a>
 
-<div id="uploadContainer">
-  <select id="categorySelect">
-    <option value="jacko">Best Jack-O-Lantern Design</option>
-    <option value="costume">Best Halloween Costume</option>
-  </select>
-  
-  <label for="fileUpload" id="voteButton">Upload Your Entry</label>
-  <input type="file" id="fileUpload" accept="image/*" style="display: none;">
-</div>
+  <div id="uploadContainer">
+    <select id="categorySelect">
+      <option value="jacko">Best Jack-O-Lantern Design</option>
+      <option value="costume">Best Halloween Costume</option>
+    </select>
 
-
+    <label for="fileUpload" id="voteButton">Upload Your Entry</label>
+    <input type="file" id="fileUpload" accept="image/*" style="display: none;">
+  </div>
 
   <script src="script.js"></script>
 </body>
