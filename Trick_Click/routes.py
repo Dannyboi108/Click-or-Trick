@@ -4,8 +4,8 @@ bp = Blueprint("main", __name__)
 
 @bp.route('/')
 def main():
-    return render_template('voting.html')
+    return render_template('index.html')
 
-@bp.route('/index')
-def index():
+@bp.route('/jacko')
+def jacko():
     return render_template('jacko.html')
