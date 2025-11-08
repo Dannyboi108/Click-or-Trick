@@ -40,15 +40,23 @@ h2 {
 
 /* Gallery */
 .jacko-gallery {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 30px;
-  justify-content: flex-start;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr); /* 2 columns */
+  grid-template-rows: repeat(2, 1fr);    /* 5 rows */
+  gap: 30px;                             /* spacing between entries */
   width: calc(100% - 370px);
-  max-width: 1200px;
-  margin-left: 20px;
+  max-width: 1000px;
+  position: relative;
+  left: -250px;
+  top: -30px;                          /* keep your left offset */
   margin-bottom: 50px;
-  padding-top: 20px;
+  padding: 20px;
+  
+  background-color: rgba(0, 0, 0, 0.7);  /* darker translucent background */
+  border-radius: 20px;
+  backdrop-filter: blur(5px);
+  overflow-y: auto;                       /* scroll if more than 5 rows */
+  height: calc(5 * 150px + 4 * 30px + 40px); /* 5 rows * entry height + gaps + padding */
 }
 
 /* Wrapper for entry + title + votes */
@@ -118,11 +126,33 @@ h2 {
   box-shadow: 0 0 15px #ff00ff, 0 0 30px #660066;
 }
 
+#removeEntryButton {
+  position: fixed;
+  bottom: 10px;
+  left: 30px; /* bottom left corner */
+  padding: 15px 30px;
+  font-size: 1.5rem;
+  font-family: "Creepster", system-ui;
+  color: #fff;
+  background-color: #ff4d4d;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 0 15px #ff4d4d, 0 0 30px #ff0000;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  z-index: 1000; /* ensures it stays above other content */
+}
+
+#removeEntryButton:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px #ff4d4d, 0 0 40px #ff0000;
+}
+
 
 /* Back button */
 #backButton {
   position: fixed;
-  bottom: 30px;
+  bottom: 10px;
   left: 50%;
   transform: translateX(-50%);
   padding: 15px 30px;
@@ -141,6 +171,29 @@ h2 {
   transform: translateX(-50%) scale(1.05);
   box-shadow: 0 0 20px #ff4d4d, 0 0 40px #ff0000;
 }
+
+#resetVotesButton {
+  position: fixed;
+  bottom: 10px;
+  left: 350px; /* bottom left corner */
+  padding: 15px 30px;
+  font-size: 1.5rem;
+  font-family: "Creepster", system-ui;
+  color: #fff;
+  background-color: #ff4d4d;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 0 15px #ff4d4d, 0 0 30px #ff0000;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  z-index: 1000; /* ensures it stays above other content */
+}
+
+#resetVotesButton:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px #ff4d4d, 0 0 40px #ff0000;
+}
+
 
 /* Right sidebar */
 #rightSidebar {
@@ -186,8 +239,8 @@ h2 {
   position: relative;
   padding-left: 40px; /* space for numbers */
   margin-bottom: 12px;
-  font-size: 1.1rem;
-  color: #fff;
+  font-size: 1.0rem;
+  color: rgb(131, 4, 160);
 }
 
 #leaderboardList li::before {
