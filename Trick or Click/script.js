@@ -162,7 +162,7 @@ document.addEventListener("DOMContentLoaded", function() {
 if (downvoteBtn) {
   downvoteBtn.addEventListener("click", () => {
     // Redirect to jumpscare page with correct path
-    window.location.href = "Scary/jumpscare.html";
+    window.location.href = "Fun/play.html";
   });
 }
 
