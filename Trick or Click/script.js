@@ -1,6 +1,26 @@
 /***********************************
- * Trick-or-Click Script
+ * Trick-or-Click Script (with Firebase)
  ***********************************/
+
+// ==== Firebase Setup ====
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+import { 
+  getFirestore, doc, getDoc, setDoc, updateDoc, increment 
+} from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAWRMlmO6AAh5lS5eVeNK21Gzlh5T65mPU",
+  authDomain: "trick-or-click.firebaseapp.com",
+  projectId: "trick-or-click",
+  storageBucket: "trick-or-click.firebasestorage.app",
+  messagingSenderId: "635082924569",
+  appId: "1:635082569:web:57717329d9dec077340088",
+  measurementId: "G-7R9G95B9JN"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
 
 // ==== Fireworks Hover Effect ====
 document.querySelectorAll('.image-container').forEach(container => {
@@ -36,58 +56,63 @@ function createFirework(container) {
   setTimeout(() => firework.remove(), 1000);
 }
 
+
 // ==== Upload Handling (Main Page) ====
 const fileUpload = document.getElementById("fileUpload");
 const categorySelect = document.getElementById("categorySelect");
 
 if (fileUpload && categorySelect) {
-  fileUpload.addEventListener("change", function(event) {
+  fileUpload.addEventListener("change", async function(event) {
     const category = categorySelect.value;
     const file = event.target.files[0];
     if (!file) return;
 
-    if (category === "costume") {
-      if (localStorage.getItem("hasUploadedCostume")) {
-        alert("You have already uploaded a costume entry. Only one entry is allowed per user.");
+    const reader = new FileReader();
+    reader.onload = async function(e) {
+      const imageData = e.target.result;
+      const storageKey = category === "costume" ? "latestCostume" : "latestJacko";
+      const uploadedFlag = category === "costume" ? "hasUploadedCostume" : "hasUploadedJacko";
+
+      if (localStorage.getItem(uploadedFlag)) {
+        alert("You have already uploaded one entry in this category.");
         event.target.value = "";
         return;
       }
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        localStorage.setItem("latestCostume", e.target.result);
-        localStorage.setItem("hasUploadedCostume", "true");
-        alert("Your costume was uploaded! Go to the Costume Gallery to see it.");
-      }
-      reader.readAsDataURL(file);
-    }
 
-    if (category === "jacko") {
-      if (localStorage.getItem("hasUploadedJacko")) {
-        alert("You have already uploaded a Jack-O-Lantern entry. Only one entry is allowed per user.");
-        event.target.value = "";
-        return;
-      }
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        localStorage.setItem("latestJacko", e.target.result);
-        localStorage.setItem("hasUploadedJacko", "true");
-        alert("Your Jack-O-Lantern was uploaded! Go to the Jack-O-Lantern Gallery to see it.");
-      }
-      reader.readAsDataURL(file);
-    }
+      // Save locally
+      localStorage.setItem(storageKey, imageData);
+      localStorage.setItem(uploadedFlag, "true");
 
+      // Determine gallery and next index
+      const gallery = category === "costume" ? document.querySelector(".costume-gallery") : document.querySelector(".jacko-gallery");
+      if (!gallery) return;
+
+      const index = gallery.children.length;
+      const docRef = doc(db, "entries", `${category}-entry-${index}`);
+
+      // Create Firestore document with initial votes
+      await setDoc(docRef, { upvotes: 0, downvotes: 0 });
+
+      // Add entry to gallery and attach vote listeners
+      await addEntry(gallery, imageData, "User Entry", category);
+
+      alert("Your entry was uploaded! Check the gallery to vote.");
+    };
+    reader.readAsDataURL(file);
     event.target.value = "";
   });
 }
 
-// ==== Gallery Handling (costume.html or jacko.html) ====
-document.addEventListener("DOMContentLoaded", function() {
+
+// ==== Gallery Handling ====
+document.addEventListener("DOMContentLoaded", async function() {
   const costumeGallery = document.querySelector(".costume-gallery");
   const jackoGallery = document.querySelector(".jacko-gallery");
   const leaderboardList = document.getElementById("leaderboardList");
 
-  function addEntry(gallery, imgSrc, altText = "User Entry", galleryType = "general") {
+  async function addEntry(gallery, imgSrc, altText = "User Entry", galleryType = "general") {
     if (!gallery) return;
+
     const newEntry = document.createElement("div");
     newEntry.classList.add(
       gallery.classList.contains("costume-gallery") ? "costume-entry-wrapper" : "jacko-entry-wrapper"
@@ -104,6 +129,14 @@ document.addEventListener("DOMContentLoaded", function() {
     gallery.appendChild(newEntry);
 
     const entryIndex = Array.from(gallery.children).indexOf(newEntry);
+
+    // Ensure Firestore document exists
+    const docRef = doc(db, "entries", `${galleryType}-entry-${entryIndex}`);
+    const snap = await getDoc(docRef);
+    if (!snap.exists()) {
+      await setDoc(docRef, { upvotes: 0, downvotes: 0 });
+    }
+
     attachVoteListeners(newEntry, entryIndex, galleryType);
 
     if (leaderboardList) {
@@ -113,31 +146,26 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   }
 
-  // Load previously uploaded entries
+  // Load previous uploads
   const latestCostume = localStorage.getItem("latestCostume");
-  if (latestCostume && costumeGallery) addEntry(costumeGallery, latestCostume, "User Costume", "costume");
+  if (latestCostume && costumeGallery) await addEntry(costumeGallery, latestCostume, "User Costume", "costume");
 
   const latestJacko = localStorage.getItem("latestJacko");
-  if (latestJacko && jackoGallery) addEntry(jackoGallery, latestJacko, "User Jack-O-Lantern", "jacko");
+  if (latestJacko && jackoGallery) await addEntry(jackoGallery, latestJacko, "User Jack-O-Lantern", "jacko");
 
   // ==== Voting functionality ====
-  function attachVoteListeners(entryWrapper, index, galleryType = "general") {
+  async function attachVoteListeners(entryWrapper, index, galleryType = "general") {
     const upvoteBtn = entryWrapper.querySelector(".upvote");
-
+    const downvoteBtn = entryWrapper.querySelector(".downvote");
+    const docRef = doc(db, "entries", `${galleryType}-entry-${index}`);
     const voteKey = `${galleryType}-entry-${index}-voted`;
     let hasVoted = localStorage.getItem(voteKey) === "true";
+
     if (hasVoted) upvoteBtn.disabled = true;
 
-    let upvotes = 0;
-    let downvotes = 0;
-    if (leaderboardList && leaderboardList.children[index]) {
-      const text = leaderboardList.children[index].textContent;
-      const match = text.match(/Upvotes\s*:\s*(\d+),\s*Downvotes\s*:\s*(\d+)/);
-      if (match) {
-        upvotes = parseInt(match[1], 10);
-        downvotes = parseInt(match[2], 10);
-      }
-    }
+    const snap = await getDoc(docRef);
+    let upvotes = snap.exists() ? snap.data().upvotes || 0 : 0;
+    let downvotes = snap.exists() ? snap.data().downvotes || 0 : 0;
 
     function updateLeaderboard() {
       if (leaderboardList && leaderboardList.children[index]) {
@@ -148,27 +176,27 @@ document.addEventListener("DOMContentLoaded", function() {
 
     updateLeaderboard();
 
-    upvoteBtn.addEventListener("click", () => {
+    // Upvote
+    upvoteBtn.addEventListener("click", async () => {
       if (hasVoted) return;
+      await updateDoc(docRef, { upvotes: increment(1) });
       upvotes++;
-      localStorage.setItem(`${galleryType}-entry-${index}-upvotes`, upvotes);
       localStorage.setItem(voteKey, "true");
       hasVoted = true;
       upvoteBtn.disabled = true;
       updateLeaderboard();
     });
 
-   const downvoteBtn = entryWrapper.querySelector(".downvote");
-if (downvoteBtn) {
-  downvoteBtn.addEventListener("click", () => {
-    // Redirect to jumpscare page with correct path
-    window.location.href = "play.html";
-  });
-}
-
+    // Downvote
+    downvoteBtn.addEventListener("click", async () => {
+      await updateDoc(docRef, { downvotes: increment(1) });
+      downvotes++;
+      updateLeaderboard();
+      window.location.href = "play.html";
+    });
   }
 
-  // Attach to existing entries
+  // Attach to existing entries in case DOM already has multiple
   document.querySelectorAll(".costume-entry-wrapper").forEach((entry, index) => {
     attachVoteListeners(entry, index, "costume");
   });
@@ -176,75 +204,45 @@ if (downvoteBtn) {
     attachVoteListeners(entry, index, "jacko");
   });
 
-  // ==== Remove Uploaded Entry Button ====
-  const removeEntryButton = document.getElementById("removeEntryButton");
-
-  if (removeEntryButton) {
-    removeEntryButton.addEventListener("click", () => {
-      let index = -1;
-
-      // Remove uploaded costume entry
-      if (latestCostume && costumeGallery) {
-        const entryToRemove = Array.from(costumeGallery.querySelectorAll(".costume-entry img"))
-          .find(img => img.src === latestCostume);
-        if (entryToRemove) {
-          const wrapper = entryToRemove.closest(".costume-entry-wrapper");
-          index = Array.from(costumeGallery.children).indexOf(wrapper);
-          wrapper.remove();
-          if (leaderboardList && leaderboardList.children[index]) {
-            leaderboardList.children[index].remove();
-          }
-        }
-        if (index >= 0) {
-          localStorage.removeItem(`costume-entry-${index}-voted`);
-          localStorage.removeItem(`costume-entry-${index}-upvotes`);
-        }
-        localStorage.removeItem("latestCostume");
-        localStorage.removeItem("hasUploadedCostume");
-      }
-
-      // Remove uploaded jack-o-lantern entry
-      if (latestJacko && jackoGallery) {
-        const entryToRemove = Array.from(jackoGallery.querySelectorAll(".jacko-entry img"))
-          .find(img => img.src === latestJacko);
-        if (entryToRemove) {
-          const wrapper = entryToRemove.closest(".jacko-entry-wrapper");
-          index = Array.from(jackoGallery.children).indexOf(wrapper);
-          wrapper.remove();
-          if (leaderboardList && leaderboardList.children[index]) {
-            leaderboardList.children[index].remove();
-          }
-        }
-        if (index >= 0) {
-          localStorage.removeItem(`jacko-entry-${index}-voted`);
-          localStorage.removeItem(`jacko-entry-${index}-upvotes`);
-        }
-        localStorage.removeItem("latestJacko");
-        localStorage.removeItem("hasUploadedJacko");
-      }
-
-      alert("Your uploaded entry has been removed. You can upload a new one now.");
-    });
-  }
-
   // ==== Reset Votes Button ====
   const resetVotesButton = document.getElementById("resetVotesButton");
-
   if (resetVotesButton) {
-    resetVotesButton.addEventListener("click", () => {
-      Object.keys(localStorage).forEach(key => {
-        if (key.startsWith('costume-entry-') || key.startsWith('jacko-entry-')) {
-          localStorage.removeItem(key);
-        }
-      });
-      localStorage.removeItem('hasUploadedCostume');
-      localStorage.removeItem('hasUploadedJacko');
-      localStorage.removeItem('latestCostume');
-      localStorage.removeItem('latestJacko');
+    resetVotesButton.addEventListener("click", async () => {
+      if (!confirm("Reset ALL votes (this will set all upvotes/downvotes to 0 in Firestore)?")) return;
 
-      alert("All votes and uploaded entries have been reset. You can start fresh!");
-      location.reload();
+      resetVotesButton.disabled = true;
+      resetVotesButton.textContent = "Resetting...";
+
+      try {
+        // Clear localStorage
+        Object.keys(localStorage).forEach(key => {
+          if (key.startsWith('costume-entry-') || key.startsWith('jacko-entry-')) {
+            localStorage.removeItem(key);
+          }
+        });
+        localStorage.removeItem('hasUploadedCostume');
+        localStorage.removeItem('hasUploadedJacko');
+        localStorage.removeItem('latestCostume');
+        localStorage.removeItem('latestJacko');
+
+        // Reset Firestore votes
+        const resetDocs = [];
+        const costumeCount = document.querySelectorAll(".costume-entry-wrapper").length;
+        const jackoCount = document.querySelectorAll(".jacko-entry-wrapper").length;
+
+        for (let i = 0; i < costumeCount; i++) resetDocs.push(doc(db, "entries", `costume-entry-${i}`));
+        for (let i = 0; i < jackoCount; i++) resetDocs.push(doc(db, "entries", `jacko-entry-${i}`));
+
+        await Promise.all(resetDocs.map(dref => setDoc(dref, { upvotes: 0, downvotes: 0 }, { merge: true })));
+
+        alert("All votes and uploads reset (Firestore + local).");
+        location.reload();
+      } catch (err) {
+        console.error("Reset error:", err);
+        alert("Something went wrong while resetting votes. Check console.");
+        resetVotesButton.disabled = false;
+        resetVotesButton.textContent = "Reset Votes";
+      }
     });
   }
-
 });
