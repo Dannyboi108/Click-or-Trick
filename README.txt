@@ -33,3 +33,7 @@ Your vote isn't just a choice — it's a summoning.
 
 
 > 🕯️ *Cast wisely. The spirits are watching...*
+
+
+To run, just clone repo, open terminal, and then run "python run.py"
+
