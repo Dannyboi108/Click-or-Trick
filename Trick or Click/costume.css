@@ -9,9 +9,7 @@
 html, body {
   height: 100%;
   width: 100%;
-  margin: 0;
-  padding: 0;
-  background-image: url('images/Background2.jpg'); /* your background image */
+  background-image: url('images/Background2.jpg'); /* page background */
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -40,27 +38,34 @@ h2 {
   text-align: center;
 }
 
+/* Costume gallery */
 .costume-gallery {
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-start;         /* align gallery to the left */
   gap: 30px;
-  width: calc(100% - 370px);           /* leave space for 350px sidebar + 20px margin */
+  justify-content: flex-start;
+  width: calc(100% - 370px);
   max-width: 1200px;
-  margin-left: 20px;                   /* optional left spacing */
+  margin-left: 20px;
   margin-bottom: 50px;
   padding-top: 20px;
 }
 
+/* Wrapper for entry + title + votes */
+.costume-entry-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Entry card */
 .costume-entry {
-  position: relative;
   width: 150px;
   height: 150px;
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(5px);
   border-radius: 20px;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
   transition: transform 0.3s, box-shadow 0.3s;
@@ -69,16 +74,7 @@ h2 {
 
 .costume-entry img {
   max-width: 80%;
-  max-height: 70%;
-  margin-bottom: 10px;
-}
-
-.costume-entry h3 {
-  font-family: "Creepster", system-ui;
-  font-size: 1.2rem;
-  text-align: center;
-  color: #ffb3ff;
-  text-shadow: 0 0 10px #ff00ff, 0 0 20px #660066;
+  max-height: 80%;
 }
 
 .costume-entry:hover {
@@ -86,6 +82,43 @@ h2 {
   box-shadow: 0 0 25px #ff00ff, 0 0 50px #660066;
 }
 
+/* Costume title */
+.costume-title {
+  font-family: "Creepster", cursive;
+  font-size: 1.2rem;
+  color: #ffb3ff;
+  text-shadow: 0 0 10px #ff00ff, 0 0 20px #660066;
+  margin-top: 10px;
+  text-align: center;
+}
+
+/* Voting buttons */
+.vote-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 5px;
+}
+
+.vote-buttons button {
+  font-family: "Creepster", cursive;
+  font-size: 1.2rem;
+  color: #ffb3ff;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 2px solid #ff00ff;
+  border-radius: 10px;
+  padding: 5px 10px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.vote-buttons button:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 15px #ff00ff, 0 0 30px #660066;
+}
+
+/* Back button */
 #backButton {
   position: fixed;
   bottom: 30px;
@@ -108,6 +141,7 @@ h2 {
   box-shadow: 0 0 20px #ff4d4d, 0 0 40px #ff0000;
 }
 
+/* Right sidebar */
 #rightSidebar {
   position: fixed;
   top: 50px;
@@ -122,8 +156,8 @@ h2 {
   color: #fff;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   display: flex;
-  justify-content: center;   /* center the text horizontally */
-  align-items: flex-start;   /* align at the top */
+  justify-content: center;
+  align-items: flex-start;
 }
 
 #rightSidebar h2 {
