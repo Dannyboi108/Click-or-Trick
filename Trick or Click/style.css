@@ -67,7 +67,7 @@ h2 {
   top: 50%;
   left: 70%;
   transform: translate(-50%, -50%);
-  animation-delay: 1s; 
+  animation-delay: 0s; 
 }
 
 .image-container h3 {
