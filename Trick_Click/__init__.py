@@ -8,7 +8,7 @@ def create_app():
     app = Flask(
     __name__,
     template_folder=frontend_dir,
-    static_folder=frontend_dir      
+    static_folder=frontend_dir
     )
 
     app.config['SECRET_KEY'] = 'your-secret-key'
