@@ -1,12 +1,11 @@
 from flask import Blueprint, render_template
-from . import create_app
 
-app = create_app()
+bp = Blueprint("main", __name__)
 
-@app.route('/')
+@bp.route('/')
 def main():
-    return render_template('main.html')
+    return render_template('voting.html')
 
-@app.route('/index')
+@bp.route('/index')
 def index():
-    return render_template('index.html')
+    return render_template('jacko.html')
