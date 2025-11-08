@@ -15,7 +15,7 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Creepster&family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap"
     rel="stylesheet">
-	<link href="https://fonts.googleapis.com/css2?family=Nosifer&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Nosifer&display=swap" rel="stylesheet">
 
   <style>
     body {
@@ -26,7 +26,7 @@
       overflow-x: hidden;
 
       /* 🔥 Background setup */
-      background: 
+      background:
         url("../Trick or Click/Background.png") no-repeat center center fixed;
       background-size: cover;
     }
@@ -77,14 +77,14 @@
     }
 
     .creepy {
-  font-size: 1.8rem;
-  line-height: 3rem;
-  color: #ff3300; /* 🔥 main text color */
-  font-family: "Nosifer", cursive;
-  position: relative;
-  text-shadow: 0 0 8px #ff3300, 0 0 20px #ff0000; /* glow effect */
-  animation: creepyFlicker 4s infinite alternate ease-in-out;
-}
+      font-size: 1.8rem;
+      line-height: 3rem;
+      color: #ff3300; /* 🔥 main text color */
+      font-family: "Nosifer", cursive;
+      position: relative;
+      text-shadow: 0 0 8px #ff3300, 0 0 20px #ff0000; /* glow effect */
+      animation: creepyFlicker 4s infinite alternate ease-in-out;
+    }
 
     @keyframes creepyFlicker {
       0% {
@@ -123,6 +123,63 @@
       transform: scale(1.1);
       box-shadow: 0 0 25px #ff6600;
     }
+
+    /* === Dark overlay + mouse-follow ellipse spotlight === */
+
+    /* -- Variables you can tweak: --spot-w, --spot-h, --overlay-opacity */
+    :root {
+      --spot-w: 300px; /* ellipse width */
+      --spot-h: 300px; /* ellipse height */
+      --overlay-opacity: 0.78; /* darkness of overlay */
+    }
+
+    /* full-screen overlay that creates a darkened page except for an ellipse (spotlight)
+       The spotlight position is controlled by CSS variables --mouse-x and --mouse-y (in px) */
+    #darkOverlay {
+      position: fixed;
+      inset: 0;
+      z-index: 9999; /* sits above page but pointer-events:none so clicks pass through */
+      pointer-events: none;
+      /* radial-gradient creates a transparent center (the hole) and darker edges */
+      background: radial-gradient(ellipse var(--spot-w) var(--spot-h) at var(--mouse-x, 50%) var(--mouse-y, 50%),
+        rgba(0,0,0,0.0) 0%,
+        rgba(0,0,0,0.0) 35%,
+        rgba(0,0,0,var(--overlay-opacity)) 60%,
+        rgba(0,0,0,var(--overlay-opacity)) 100%);
+      transition: background 0.02s linear;
+      mix-blend-mode: normal;
+      will-change: background-position, background;
+    }
+
+    /* subtle rim glow for the ellipse — purely visual, also follows mouse via transform */
+    #spotRim {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: var(--spot-w);
+      height: var(--spot-h);
+      border-radius: 50%;
+      transform: translate(calc(var(--mouse-x, 50%) - (var(--spot-w) / 2)), calc(var(--mouse-y, 50%) - (var(--spot-h) / 2)));
+      pointer-events: none;
+      z-index: 10000; /* above the dark overlay so rim is visible */
+      filter: blur(10px);
+      opacity: 0.5;
+      background: radial-gradient(ellipse at center,
+        rgba(255, 80, 0, 0.18) 0%,
+        rgba(255, 80, 0, 0.06) 35%,
+        rgba(0,0,0,0) 80%);
+      transition: transform 0.04s linear;
+      will-change: transform;
+      mix-blend-mode: screen;
+    }
+
+    /* small media tweaks */
+    @media (max-width: 600px) {
+      :root {
+        --spot-w: 200px;
+        --spot-h: 120px;
+      }
+    }
   </style>
 </head>
 
@@ -151,6 +208,59 @@
       </form>
     </div>
   </div>
+
+  <!-- Dark overlay + rim (spotlight) elements -->
+  <div id="darkOverlay" aria-hidden="true"></div>
+  <div id="spotRim" aria-hidden="true"></div>
+
+  <script>
+    (function () {
+      const overlay = document.getElementById('darkOverlay');
+      const rim = document.getElementById('spotRim');
+
+      // set initial center position
+      function setInitialPosition() {
+        const cx = Math.round(window.innerWidth / 2);
+        const cy = Math.round(window.innerHeight / 2);
+        overlay.style.setProperty('--mouse-x', cx + 'px');
+        overlay.style.setProperty('--mouse-y', cy + 'px');
+        rim.style.setProperty('--mouse-x', cx + 'px');
+        rim.style.setProperty('--mouse-y', cy + 'px');
+      }
+      setInitialPosition();
+
+      // update position on mousemove
+      function handleMove(x, y) {
+        overlay.style.setProperty('--mouse-x', x + 'px');
+        overlay.style.setProperty('--mouse-y', y + 'px');
+        rim.style.setProperty('--mouse-x', x + 'px');
+        rim.style.setProperty('--mouse-y', y + 'px');
+
+        /* Also directly change transform for the rim to get smoother motion on some browsers */
+        const spotW = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--spot-w')) || 280;
+        const spotH = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--spot-h')) || 160;
+        // translate to place the center of the rim at the mouse point
+        rim.style.transform = `translate(${x - (spotW / 2)}px, ${y - (spotH / 2)}px)`;
+      }
+
+      window.addEventListener('mousemove', (e) => {
+        handleMove(e.clientX, e.clientY);
+      }, { passive: true });
+
+      // support touch
+      window.addEventListener('touchmove', (e) => {
+        const t = e.touches[0];
+        if (t) {
+          handleMove(t.clientX, t.clientY);
+        }
+      }, { passive: true });
+
+      // update center if window resizes
+      window.addEventListener('resize', () => {
+        setInitialPosition();
+      });
+    })();
+  </script>
 </body>
 
 </html>
