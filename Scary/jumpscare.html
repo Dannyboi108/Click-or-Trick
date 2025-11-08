@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Jumpscare</title>
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            background: #000;
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        #scary-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+            z-index: 10;
+        }
+    </style>
+</head>
+
+<body>
+
+    <img id="scary-img" src="../images/scary.jpg" alt="Scary">
+
+    <script>
+        const audio = new Audio('../Scary/assets/audio/scary.mp3');
+        audio.volume = 1;
+
+        const scaryImg = document.getElementById('scary-img');
+
+        function jumpscare() {
+            // Show scary image
+            scaryImg.style.display = 'block';
+
+            // Play audio
+            audio.play().catch(err => console.log('Audio failed to play:', err));
+
+            // Redirect after 4 seconds
+            setTimeout(() => {
+                window.location.href = '../index.html'; // keep link as you wrote
+            }, 4000);
+        }
+
+        // Trigger jumpscare on click
+        document.body.addEventListener('click', jumpscare, { once: true });
+    </script>
+
+</body>
+
+</html>
