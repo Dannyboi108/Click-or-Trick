@@ -158,8 +158,14 @@ document.addEventListener("DOMContentLoaded", function() {
       updateLeaderboard();
     });
 
-    const downvoteBtn = entryWrapper.querySelector(".downvote");
-    if (downvoteBtn) downvoteBtn.addEventListener("click", () => {});
+   const downvoteBtn = entryWrapper.querySelector(".downvote");
+if (downvoteBtn) {
+  downvoteBtn.addEventListener("click", () => {
+    // Redirect to jumpscare page with correct path
+    window.location.href = "Scary/jumpscare.html";
+  });
+}
+
   }
 
   // Attach to existing entries
@@ -237,7 +243,7 @@ document.addEventListener("DOMContentLoaded", function() {
       localStorage.removeItem('latestJacko');
 
       alert("All votes and uploaded entries have been reset. You can start fresh!");
-      location.reload(); // refresh page to reset leaderboard
+      location.reload();
     });
   }
 
