@@ -1,0 +1,140 @@
+@import url('https://fonts.googleapis.com/css2?family=Creepster&display=swap');
+
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+  background-image: url('images/Background2.jpg'); 
+  background-size: cover;      
+  background-position: center; 
+  background-repeat: no-repeat;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
+  padding-top: 0px; 
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  overflow: hidden;
+  color: #fff;
+}
+
+h1 {
+  font-family: "Creepster", system-ui;
+  font-size: 4rem;
+  color: #ffb3ff;
+  text-shadow: 0 0 25px #ff00ff, 0 0 50px #660066;
+  background: none;
+  border: none;
+  box-shadow: none;
+}
+
+h2 {
+  font-family: "Creepster", system-ui;
+  font-size: 2.5rem;
+  color: #ff9767;
+  text-shadow: 0 0 15px #ff8636, 0 0 30px #ff7700;
+  margin-top: 20px; 
+}
+
+.image-container {
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column; 
+  justify-content: center;
+  align-items: center;
+  border-radius: 20px;
+  backdrop-filter: blur(5px);
+  z-index: 0;
+  animation: bob 3s ease-in-out infinite alternate;
+}
+
+#image1 {
+  top: 50%;
+  left: 30%;
+  transform: translate(-50%, -50%);
+}
+
+#image2 {
+  top: 50%;
+  left: 70%;
+  transform: translate(-50%, -50%);
+  animation-delay: 1s; 
+}
+
+.image-container h3 {
+  margin-top: 10px; 
+  font-family: "Creepster", system-ui;
+  font-size: 1.5rem;
+  color: #f99305;
+  text-shadow: 0 0 10px #ff00ff, 0 0 20px #660066;
+  text-align: center;
+}
+
+.image-container img {
+  max-width: 80%;
+  max-height: 80%;
+  z-index: 1;
+}
+
+@keyframes bob {
+  0% { transform: translate(-50%, -52%); }
+  50% { transform: translate(-50%, -48%); }
+  100% { transform: translate(-50%, -52%); }
+}
+
+#uploadContainer {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+#categorySelect {
+  padding: 10px 15px;
+  font-size: 1.2rem;
+  border-radius: 10px;
+  border: none;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: #ffffff;
+  font-family: "Creepster", system-ui;
+  text-align: center;
+  box-shadow: 0 0 10px #ff00ff, 0 0 20px #660066;
+}
+
+#voteButton {
+  padding: 15px 30px;
+  font-size: 1.5rem;
+  font-family: "Creepster", system-ui;
+  color: #fff;
+  background-color: #ff4d4d;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 0 15px #ff4d4d, 0 0 30px #ff0000;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+#voteButton:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px #ff4d4d, 0 0 40px #ff0000;
+}
+
+
+
+
+
+
+
